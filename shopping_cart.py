@@ -38,6 +38,33 @@ def to_usd(my_price):
 
 
 # TODO: write some Python code here to produce the desired output
+import os
+from dotenv import load_dotenv
 
-print(products)
+
+
+
+
+# tax_rate = os.getenv("TAX_RATE", default=".0875")
+
+# tax_amount = subtotal * tax_rate
+
+
+print("---------------------------------")
+print("Thank you for shopping at Frank's Foods.")  
+print("Call us at (212) 998-1212 or visit us online at www.franksfoods.com")
+print("---------------------------------")
+print(f"Checkout time:",{checkout_time}) #TODO create checkout_time variable
+print("---------------------------------")
+print("Selected Products:")
+print() #TODO The name and price of each shopping cart item, price being formatted as US dollars and cents (e.g. $3.50, etc.)
+print("Subtotal:") #TODO The total cost of all shopping cart items (i.e. the "subtotal"), formatted as US dollars and cents (e.g. $19.47), calculated as the sum of their prices
+print("---------------------------------")
+print("Tax Amount:") #TODO The amount of tax owed (e.g. $1.70), calculated by multiplying the total cost by a New York City sales tax rate of 8.75% (for the purposes of this project, groceries are not exempt from sales tax)
+print("Total:",{tax_amount}+{subtotal}) #TODO The total amount owed, formatted as US dollars and cents (e.g. $21.17), calculated by adding together the amount of tax owed plus the total cost of all shopping cart items
+print("Thank you for shopping with us! Please come again!") 
+
+# print(products)
+
+
 
