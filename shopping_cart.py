@@ -42,12 +42,25 @@ import os
 from dotenv import load_dotenv
 
 
+scanned_product = ""
+selected_products = []
+subtotal = 0
+
+print("Please scan the products being purchased. Type 'Done' when you have finished scanning")
+
+while scanned_product != "Done":
+    scanned_product = input("Please input a product identifier: ")
+    # TODO validate product identifier input
+    selected_products.append(scanned_product)
 
 
+# for i in selected_products:
+#     subtotal += products[i]["price"] 
 
-# tax_rate = os.getenv("TAX_RATE", default=".0875")
 
-# tax_amount = subtotal * tax_rate
+tax_rate = os.getenv("TAX_RATE", default=".0875")
+
+tax_amount = subtotal * tax_rate
 
 
 print("---------------------------------")
