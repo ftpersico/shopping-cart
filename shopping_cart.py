@@ -42,20 +42,34 @@ import os
 from dotenv import load_dotenv
 
 
-scanned_product = ""
-selected_products = []
-subtotal = 0
+all_product_ids =["Done"]
+for i in products:
+    all_product_ids.append(str(i["id"]))
 
 print("Please scan the products being purchased. Type 'Done' when you have finished scanning")
 
+scanned_product = ""
+selected_products = []
+
 while scanned_product != "Done":
     scanned_product = input("Please input a product identifier: ")
-    # TODO validate product identifier input
-    selected_products.append(scanned_product)
+    if scanned_product in all_product_ids:
+        selected_products.append(scanned_product)
+    else:
+        print("I'm sorry I can't find that product ID, please try again.")
 
+
+def price_lookup(id):
+    for i in products:
+        if i["id"] == id:
+            selected_price = i["price"]
+    return selected_price
+
+
+subtotal = 0
 
 # for i in selected_products:
-#     subtotal += products[i]["price"] 
+#     subtotal += products[i]["price"]  # TODO not working
 
 
 tax_rate = os.getenv("TAX_RATE", default=".0875")
