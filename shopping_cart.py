@@ -41,23 +41,29 @@ def to_usd(my_price):
 import os
 from dotenv import load_dotenv
 
-
-all_product_ids =["Done"]
+# Define the list of all possible product IDs for use in validation later
+all_product_ids =[]
 for i in products:
     all_product_ids.append(str(i["id"]))
 
 print("Please scan the products being purchased. Type 'Done' when you have finished scanning")
 
-scanned_product = ""
+# Request user to input product ids. Validate that the ids are in our list of products and save ids for use later
+scanned_product = []
 selected_products = []
 
-while scanned_product != "Done":
+
+while scanned_product != "Done": # TODO Replace this with 1=1?
     scanned_product = input("Please input a product identifier: ")
     if scanned_product in all_product_ids:
-        selected_products.append(scanned_product)
+        selected_products.append(int(scanned_product))
+    elif scanned_product == "Done":
+        break
     else:
         print("I'm sorry I can't find that product ID, please try again.")
+    
 
+# Define a function to look up the price of a product when given a product
 
 def price_lookup(id):
     for i in products:
@@ -68,27 +74,30 @@ def price_lookup(id):
 
 subtotal = 0
 
-# for i in selected_products:
-#     subtotal += products[i]["price"]  # TODO not working
+for i in selected_products:
+    subtotal += products[i-1]["price"]  # TODO not working
 
-
-tax_rate = os.getenv("TAX_RATE", default=".0875")
+load_dotenv()
+tax_rate = float(os.getenv("TAX_RATE", default=.0875))
 
 tax_amount = subtotal * tax_rate
 
+checkout_time = 1 #TODO pull time dynamically
+
+grand_total = tax_amount + subtotal
 
 print("---------------------------------")
 print("Thank you for shopping at Frank's Foods.")  
 print("Call us at (212) 998-1212 or visit us online at www.franksfoods.com")
 print("---------------------------------")
-print(f"Checkout time:",{checkout_time}) #TODO create checkout_time variable
+print("Checkout time:",checkout_time) #TODO create checkout_time variable
 print("---------------------------------")
 print("Selected Products:")
 print() #TODO The name and price of each shopping cart item, price being formatted as US dollars and cents (e.g. $3.50, etc.)
-print("Subtotal:") #TODO The total cost of all shopping cart items (i.e. the "subtotal"), formatted as US dollars and cents (e.g. $19.47), calculated as the sum of their prices
+print("Subtotal:", subtotal) #TODO The total cost of all shopping cart items (i.e. the "subtotal"), formatted as US dollars and cents (e.g. $19.47), calculated as the sum of their prices
 print("---------------------------------")
-print("Tax Amount:") #TODO The amount of tax owed (e.g. $1.70), calculated by multiplying the total cost by a New York City sales tax rate of 8.75% (for the purposes of this project, groceries are not exempt from sales tax)
-print("Total:",{tax_amount}+{subtotal}) #TODO The total amount owed, formatted as US dollars and cents (e.g. $21.17), calculated by adding together the amount of tax owed plus the total cost of all shopping cart items
+print("Tax Amount:",tax_amount) #TODO The amount of tax owed (e.g. $1.70), calculated by multiplying the total cost by a New York City sales tax rate of 8.75% (for the purposes of this project, groceries are not exempt from sales tax)
+print("Total:",grand_total) #TODO The total amount owed, formatted as US dollars and cents (e.g. $21.17), calculated by adding together the amount of tax owed plus the total cost of all shopping cart items
 print("Thank you for shopping with us! Please come again!") 
 
 # print(products)
