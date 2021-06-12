@@ -109,6 +109,12 @@ Thank you for shopping with us! Please come again!
 ---------------------------------"""
 print(receipt)
 
-# TODO Save receipt file
- 
+# Save the receipt to a text file
+receipt_name = datetime.now().strftime("%d-%m-%Y-%I-%M-%S-%f")
+
+file_name = f"receipts/{receipt_name}.txt"
+
+with open(file_name, "w") as file: # "w" means "open the file for writing"
+    file.write(receipt)
+
 # TODO send email receipt
