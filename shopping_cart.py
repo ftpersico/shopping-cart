@@ -40,6 +40,9 @@ def to_usd(my_price):
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 
 # Define the list of all possible product IDs for use in validation later
 all_product_ids =[]
@@ -114,7 +117,32 @@ receipt_name = datetime.now().strftime("%d-%m-%Y-%I-%M-%S-%f")
 
 file_name = f"receipts/{receipt_name}.txt"
 
-with open(file_name, "w") as file: # "w" means "open the file for writing"
+with open(file_name, "w") as file:
     file.write(receipt)
 
-# TODO send email receipt
+# Send email receipt to customer
+customer_email = input("Please provide your email address: ")
+
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
+SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
+
+client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
+print("CLIENT:", type(client))
+
+subject = "Your Receipt from Frank's Foods"
+
+html_content = receipt
+
+message = Mail(from_email=SENDER_ADDRESS, to_emails=customer_email, subject=subject, html_content=html_content)
+
+try:
+    response = client.send(message)
+
+    print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
+    print(response.status_code) #> 202 indicates SUCCESS
+    print(response.body)
+    print(response.headers)
+
+except Exception as err:
+    print(type(err))
+    print(err)

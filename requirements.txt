@@ -1,3 +1,5 @@
 # required third party packages
 
 python-dotenv
+
+sendgrid==6.6.0
