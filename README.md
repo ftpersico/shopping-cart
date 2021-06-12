@@ -16,5 +16,5 @@ Now you can run the app whenever you need to by executing the following command:
 
     python shopping_cart.py
 
-A
+
 

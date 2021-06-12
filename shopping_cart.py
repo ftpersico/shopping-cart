@@ -63,7 +63,7 @@ while True:
     
 
 # Define a function to look up the price of a product when given a product
-def price_lookup(id): # TODO turn into a single line?
+def price_lookup(id): # TODO turn into list comprehension?
     for i in products:
         if i["id"] == id:
             selected_price = i["price"]
@@ -87,26 +87,28 @@ grand_total = tax_amount + subtotal
 # Store current time as the checkout time 
 checkout_time = datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")
 
-# Print receipt with items and amounts
-print("---------------------------------")
-print("Thank you for shopping at Frank's Foods.")  
-print("Call us at (212) 998-1212 or visit us online at www.franksfoods.com")
-print("---------------------------------")
-print("Checkout time:",checkout_time)
-print("---------------------------------")
-print("Selected Products:")
+# Assemble receipt with items and amounts in a new variable. Print the receipt.
+receipt = ""
+receipt += f"""---------------------------------
+Thank you for shopping at Frank's Foods.
+Call us at (212) 998-1212 or visit us online at www.franksfoods.com
+--------------------------------- 
+Checkout time: {checkout_time}
+---------------------------------
+Selected Products:\n"""
 for h in selected_products:
     for i in products:
         if i["id"] == h:
-            print("...",i["name"],f"({to_usd(i['price'])})")
-print("---------------------------------")
-print("Subtotal:", to_usd(subtotal))
-print("Tax:",to_usd(tax_amount))
-print("Total:",to_usd(grand_total))
-print("---------------------------------")
-print("Thank you for shopping with us! Please come again!") 
-print("---------------------------------")
+            receipt += "... " + i["name"] + " (" + to_usd(i['price'])+")\n"
+receipt += f"""---------------------------------
+Subtotal:{to_usd(subtotal)}
+Tax: {to_usd(tax_amount)}
+Total: {to_usd(grand_total)}
+---------------------------------
+Thank you for shopping with us! Please come again!
+---------------------------------"""
+print(receipt)
 
-# TODO save to a txt file
+# TODO Save receipt file
+ 
 # TODO send email receipt
-
