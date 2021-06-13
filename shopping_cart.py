@@ -64,7 +64,7 @@ while True:
     
 
 # Define a function to look up the price of a product when given a product
-def price_lookup(id): # TODO turn into list comprehension?
+def price_lookup(id):
     for i in products:
         if i["id"] == id:
             selected_price = i["price"]
@@ -122,7 +122,7 @@ with open(file_name, "w") as file:
 customer_email = input("Please provide your email address: ")
 checkout_products = []
 for h in selected_products:
-    for i in products: #TODO list comprehension
+    for i in products:
         if i["id"] == h:
            checkout_products.append({
                "id": i["id"],
@@ -133,12 +133,11 @@ SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env v
 SENDGRID_TEMPLATE_ID = os.getenv("SENDGRID_TEMPLATE_ID", default="OOPS, please set env var called 'SENDGRID_TEMPLATE_ID'")
 SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
 
-# this must match the test data structure
 template_data = {
     "total_price_usd": f"{to_usd(grand_total)}",
     "human_friendly_timestamp": checkout_time,
     "products":checkout_products
-} # or construct this dictionary dynamically based on the results of some other process :-D
+} 
 
 client = SendGridAPIClient(SENDGRID_API_KEY)
 print("CLIENT:", type(client))
