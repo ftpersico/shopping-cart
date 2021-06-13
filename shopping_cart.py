@@ -113,7 +113,7 @@ print(receipt)
 # Save the receipt to a text file
 receipt_name = datetime.now().strftime("%Y-%m-%d-%I-%M-%S-%f")
 
-file_name = f"receipts/{receipt_name}.txt"
+file_name = f"receipts/{receipt_name}.txt" # TODO get this working using the OS module methods
 
 with open(file_name, "w") as file:
     file.write(receipt)
