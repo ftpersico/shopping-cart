@@ -1,4 +1,9 @@
 # shopping_cart.py
+import os
+from dotenv import load_dotenv
+from datetime import datetime
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -35,13 +40,6 @@ def to_usd(my_price):
     Returns: $4,000.44
     """
     return f"${my_price:,.2f}" #> $12,000.71
-
-
-import os
-from dotenv import load_dotenv
-from datetime import datetime
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 
 
 # Define the list of all possible product IDs for use in validation later
@@ -88,7 +86,7 @@ tax_amount = subtotal * tax_rate
 grand_total = tax_amount + subtotal
 
 # Store current time as the checkout time 
-checkout_time = datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")
+checkout_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
 
 # Assemble receipt with items and amounts in a new variable. Print the receipt.
 receipt = ""
@@ -113,7 +111,7 @@ Thank you for shopping with us! Please come again!
 print(receipt)
 
 # Save the receipt to a text file
-receipt_name = datetime.now().strftime("%d-%m-%Y-%I-%M-%S-%f")
+receipt_name = datetime.now().strftime("%Y-%m-%d-%I-%M-%S-%f")
 
 file_name = f"receipts/{receipt_name}.txt"
 
@@ -122,24 +120,38 @@ with open(file_name, "w") as file:
 
 # Send email receipt to customer
 customer_email = input("Please provide your email address: ")
+checkout_products = []
+for h in selected_products:
+    for i in products: #TODO list comprehension
+        if i["id"] == h:
+           checkout_products.append({
+               "id": i["id"],
+               "name": i["name"]
+           })
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
+SENDGRID_TEMPLATE_ID = os.getenv("SENDGRID_TEMPLATE_ID", default="OOPS, please set env var called 'SENDGRID_TEMPLATE_ID'")
 SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
 
-client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
+# this must match the test data structure
+template_data = {
+    "total_price_usd": f"{to_usd(grand_total)}",
+    "human_friendly_timestamp": checkout_time,
+    "products":checkout_products
+} # or construct this dictionary dynamically based on the results of some other process :-D
+
+client = SendGridAPIClient(SENDGRID_API_KEY)
 print("CLIENT:", type(client))
 
-subject = "Your Receipt from Frank's Foods"
-
-html_content = receipt
-
-message = Mail(from_email=SENDER_ADDRESS, to_emails=customer_email, subject=subject, html_content=html_content)
+message = Mail(from_email=SENDER_ADDRESS, to_emails= customer_email)
+message.template_id = SENDGRID_TEMPLATE_ID
+message.dynamic_template_data = template_data
+print("MESSAGE:", type(message))
 
 try:
     response = client.send(message)
-
-    print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
-    print(response.status_code) #> 202 indicates SUCCESS
+    print("RESPONSE:", type(response))
+    print(response.status_code)
     print(response.body)
     print(response.headers)
 

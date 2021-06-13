@@ -15,6 +15,3 @@ Once you environment is activated install the required packages by running:
 Now you can run the app whenever you need to by executing the following command:
 
     python shopping_cart.py
-
-
-

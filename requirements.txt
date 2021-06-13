@@ -3,3 +3,5 @@
 python-dotenv
 
 sendgrid==6.6.0
+
+SENDGRID_TEMPLATE_ID =  d-6fd5cea7cb9f4de39ca49443acb90299
